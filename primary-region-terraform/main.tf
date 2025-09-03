@@ -79,88 +79,6 @@ resource "aws_s3_bucket" "artifact" {
 }
 resource "random_id" "rand" { byte_length = 4 }
 
-resource "aws_ecr_repository" "frontend" { name = "frontend-image" }
-resource "aws_ecr_repository" "backend" { name = "backend-image" }
-
-
-resource "aws_iam_role" "eks_cluster_role" {
-  name = "EKSClusterRoleTerraform"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect    = "Allow",
-      Principal = { Service = "eks.amazonaws.com" },
-      Action    = "sts:AssumeRole"
-    }]
-  })
-  tags = { Name = "three-tier-cluster-role" }
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster_role_attachments" {
-  for_each = toset([
-    "AmazonEKSClusterPolicy",
-    "AmazonEKSVPCResourceController",
-    "AdministratorAccess"
-  ])
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/${each.value}"
-}
-
-resource "aws_eks_cluster" "cluster" {
-  name     = "three-tier-cluster"
-  role_arn = aws_iam_role.eks_cluster_role.arn
-  vpc_config {
-    subnet_ids              = concat(aws_subnet.public.*.id, aws_subnet.private.*.id)
-    endpoint_public_access  = true
-    endpoint_private_access = false
-  }
-  tags       = { Name = "three-tier-cluster" }
-  depends_on = [aws_iam_role.eks_cluster_role]
-}
-resource "aws_iam_role" "eks_node_role" {
-  name = "EKSNodeGroupRoleTerraform"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-      Action = "sts:AssumeRole"
-    }]
-  })
-  tags = {
-    Name = "three-tier-eks-node-role"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_role_attachments" {
-  for_each = toset([
-    "AmazonEKSWorkerNodePolicy",
-    "AmazonEC2ContainerRegistryReadOnly",
-    "AmazonEKS_CNI_Policy",
-    "AmazonSSMManagedInstanceCore"
-  ])
-
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/${each.value}"
-}
-resource "aws_eks_node_group" "nodes" {
-  cluster_name    = aws_eks_cluster.cluster.name
-  node_group_name = "three-tier-nodegroup"
-  node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = concat(aws_subnet.public.*.id, aws_subnet.private.*.id)
-  scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
-  }
-  instance_types = ["t3.medium"]
-  ami_type       = "AL2_x86_64"
-  disk_size      = 20
-  tags           = { Name = "three-tier-nodegroup" }
-  depends_on     = [aws_iam_role.eks_node_role]
-}
 
 
 resource "aws_security_group" "rds_sg" {
@@ -198,6 +116,4 @@ resource "aws_db_instance" "mysql" {
 
 
 
-output "vpc_id" { value = aws_vpc.main.id }
-output "eks_endpoint" { value = aws_eks_cluster.cluster.endpoint }
-output "rds_endpoint" { value = aws_db_instance.mysql.address }
+
