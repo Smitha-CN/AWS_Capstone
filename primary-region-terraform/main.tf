@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "my-tf-state-bucket15"
+    bucket = "my-tf-state-bucketbackends1"
     key    = "us-west-1/terraform.tfstate"
     region = "us-west-1"
   }
@@ -166,40 +166,6 @@ resource "aws_db_instance" "rds" {
   db_name                 = "catalogdb"
 }
 
-resource "aws_dynamodb_table" "cart" {
-  name           = "cart"
-  hash_key       = "id"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
 
-  attribute {
-    name = "id"
-    type = "S"
-  }
-}
 
-module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = var.eks_cluster_name
-  cluster_version = "1.29"
 
-  cluster_endpoint_public_access = true
-  subnet_ids = [
-    aws_subnet.private_1.id,
-    aws_subnet.private_2.id
-  ]
-  vpc_id = aws_vpc.main.id
-
-  eks_managed_node_groups = {
-    default = {
-      desired_size   = var.eks_desired_size
-      max_size       = var.eks_max_size
-      min_size       = var.eks_min_size
-      instance_types = ["t3.medium"]
-      name           = "default"
-      ami_type       = "AL2_x86_64"
-      key_name       = "bhargav1"
-    }
-  }
-}
