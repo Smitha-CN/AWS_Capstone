@@ -34,11 +34,9 @@ phases:
   post_build:
     commands:
       - echo Terraform deployment complete
-      - terraform output -raw eks_cluster_name_output || echo eks_cluster_name_output not found
-      - terraform output -raw db_endpoint_address || echo db_endpoint_address not found
-
+      
 artifacts:
   files:
     - tfstate/terraform.tfstate
-    - buildspec-deploy.yml
+    - buildspec-infra.yaml
   discard-paths: yes
