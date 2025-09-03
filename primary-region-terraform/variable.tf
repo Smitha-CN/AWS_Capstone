@@ -14,7 +14,3 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "eks_admin_iam_arn" {
-  description = "IAM ARN for EKS admin user"
-  default     = "arn:aws:iam::047719630685:user/Admin-USer"
-}
