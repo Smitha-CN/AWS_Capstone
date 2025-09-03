@@ -1,35 +1,29 @@
-variable "region" {
-  description = "AWS region where resources will be deployed"
-  default     = "us-west-1"
+variable "vpc_cidr"           
+{ 
+default ="10.0.0.0/16"
 }
- 
-variable "github_repo" {
-  description = "GitHub repository name"
-  default     = "ThakurSahilSingh/Capstone-Terraform-Deployment"
+variable "public_subnet_1"   
+{ 
+default = "10.0.1.0/24" 
 }
- 
-variable "github_branch" {
-  description = "Branch of the GitHub repository to use"
-  default     = "main"
+variable "public_subnet_2"    
+{
+default ="10.0.2.0/24"
 }
- 
-variable "github_connection_arn" {
-  description = "GitHub CodeConnection ARN"
-  default     = "arn:aws:codeconnections:us-east-1:137068239975:connection/9a43b008-427b-4209-b7ea-08743b549f7a"
+variable "private_subnet_1"   
+{
+default = "10.0.3.0/24" 
 }
- 
-variable "db_username" {
-  description = "Database username"
-  default     = "admin"
+variable "private_subnet_2"   
+{ 
+default = "10.0.4.0/24" 
 }
- 
-variable "db_password" {
-  description = "Database password"
-  default     = "Admin123123"
-  sensitive   = true
+
+variable "db_username"    
+{ 
+default = "admin" 
 }
- 
-variable "eks_admin_iam_arn" {
-  description = "IAM ARN for EKS admin user"
-  default     = "arn:aws:iam::137068239975:user/sahil13"
+variable "db_password"    
+{ 
+default = "admin1234"
 }
