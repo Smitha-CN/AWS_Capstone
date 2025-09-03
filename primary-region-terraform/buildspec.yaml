@@ -31,7 +31,7 @@ phases:
     commands:
       - "echo \"Changing to Terraform directory (assuming main.tf is at root of source artifact)...\""
       # If your Terraform files are in a subdirectory (e.g., 'terraform/'), uncomment and adjust the line below:
-      # - "cd primary-region-terraform/"
+     - "cd primary-region-terraform/"
       - "echo \"Initializing Terraform...\""
       - "terraform init"
  
