@@ -40,8 +40,7 @@ phases:
     commands:
       - "echo \"Terraform deployment complete.\""
       # The following commands output useful information after deployment:
-      - "echo \"EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)\""
-      - "echo \"RDS Endpoint Address: $(terraform output -raw db_endpoint_address)\""
+     
  
 # Artifacts are not typically needed for infrastructure deployments that directly modify AWS resources.
 # If you used a remote state backend (recommended), the state would be stored there.
