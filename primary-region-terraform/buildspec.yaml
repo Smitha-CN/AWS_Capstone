@@ -31,10 +31,7 @@ phases:
       - echo "Creating plan..."
       - terraform plan -out=tfplan.out
 
-  post_build:
-    commands:
-      - echo "Plan complete: tfplan.out"
-
+  
 artifacts:
   files:
     - tfplan.out
